@@ -1,0 +1,22 @@
+{
+  "name": "xinfox/thinkphp-component",
+  "type": "library",
+  "license": "Apache-2.0",
+  "description": "",
+  "authors": [
+    {
+      "name": "韦明磊",
+      "email": "nicolaslei@163.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "topthink/framework": "^6.0",
+    "xinfox/jwt-auth": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "XinFox\\ThinkPHP\\Component\\": "src"
+    }
+  }
+}

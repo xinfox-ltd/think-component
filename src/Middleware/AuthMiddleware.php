@@ -5,18 +5,19 @@
  */
 declare(strict_types=1);
 
-namespace XinFox\ThinkPHP\Component\Middleware;
+namespace XinFox\ThinkPHP\Middleware;
 
 use Closure;
 use think\helper\Str;
 use XinFox\Auth\Auth;
 use XinFox\Auth\Exception\ForbiddenException;
 use XinFox\Auth\Exception\UnauthorizedException;
-use XinFox\ThinkPHP\Component\Provider\Request;
+use XinFox\ThinkPHP\Provider\Request;
 
 class AuthMiddleware
 {
     protected Auth $auth;
+
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace XinFox\ThinkPHP\Component\Search;
+namespace XinFox\ThinkPHP\Search;
 
 interface SearchInterface
 {

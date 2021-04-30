@@ -16,7 +16,10 @@
   },
   "autoload": {
     "psr-4": {
-      "XinFox\\ThinkPHP\\Component\\": "src"
-    }
+      "XinFox\\ThinkPHP\\": "src"
+    },
+    "files": [
+      "app/common.php"
+    ]
   }
 }

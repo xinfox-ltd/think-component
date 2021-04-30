@@ -5,14 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace XinFox\ThinkPHP\Component\Http;
+namespace XinFox\ThinkPHP\Http;
 
-class Request extends \XinFox\ThinkPHP\Component\Provider\Request
+class Request extends \XinFox\ThinkPHP\Provider\Request
 {
+    protected bool $batchValidate = false;
+
     public function __construct()
     {
         parent::__construct();
         $this->validate();
+    }
+
+    protected function beforeValidate()
+    {
     }
 
     /**
@@ -33,11 +39,13 @@ class Request extends \XinFox\ThinkPHP\Component\Provider\Request
      */
     protected function validate()
     {
+        $this->beforeValidate();
+
         $rules = $this->rules();
-        if ($rules) {
+        if ($rules && $this->isPost()) {
             // 验证
             $message = $this->message();
-            validate($rules, $message);
+            validate($rules, $message, $this->batchValidate)->check($this->post());
         }
     }
 }

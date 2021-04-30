@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace XinFox\ThinkPHP\Component;
+namespace XinFox\ThinkPHP;
 
 use XinFox\Auth\Auth;
-use XinFox\ThinkPHP\Component\Middleware\AuthMiddleware;
+use XinFox\ThinkPHP\Middleware\AuthMiddleware;
 
 class Service extends \think\Service
 {

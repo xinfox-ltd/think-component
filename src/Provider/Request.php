@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace XinFox\ThinkPHP\Component\Provider;
+namespace XinFox\ThinkPHP\Provider;
 
 use XinFox\Auth\Guest;
 use XinFox\Auth\VisitorInterface;

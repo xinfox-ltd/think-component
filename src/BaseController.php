@@ -25,10 +25,6 @@ abstract class BaseController
     protected App $app;
 
     protected Request $request;
-    /**
-     * @var object|Auth
-     */
-    protected Auth $auth;
 
     /**
      * @var Cache

@@ -19,7 +19,7 @@
       "XinFox\\ThinkPHP\\": "src"
     },
     "files": [
-      "app/common.php"
+      "src/common.php"
     ]
   }
 }

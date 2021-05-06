@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace XinFox;
+namespace XinFox\ThinkPHP;
 
 use think\App;
 use think\Cache;

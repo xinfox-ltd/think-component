@@ -52,7 +52,7 @@ if (!function_exists('error403_response')) {
 if (!function_exists('error404_response')) {
     function error404_response($message = '数据不存在'): Json
     {
-        return error_response($message, null, 404);
+        return error_response($message, 404, []);
     }
 }
 

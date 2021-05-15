@@ -26,7 +26,7 @@ class AuthMiddleware
     /**
      * @param Request $request
      * @param Closure $next
-     * @param $roles
+     * @param mixed $roles
      * @return mixed
      * @throws UnauthorizedException
      * @throws ForbiddenException

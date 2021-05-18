@@ -28,7 +28,8 @@ abstract class Engine implements EngineInterface
             $this->page = intval($data['page']);
         }
 
-        $this->pageSize = $data['pageSize'] ?? $data['page_size'] ??= 1;
+        $pageSize = $data['pageSize'] ?? $data['page_size'] ??= 1;
+        $this->pageSize = (int)$pageSize;
 
         if ($this->pageSize > 100) {
             throw new \InvalidArgumentException('pageSize 不能超过100');

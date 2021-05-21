@@ -70,7 +70,7 @@ class AccessInit extends Command
             $uri = preg_replace('/<(.*)>/Ui', ':$1', $item['rule']);
             AuthRule::create([
                 'status' => 1,
-                'name' => $item['name'],
+                'name' => empty($item['name']) ? $uri: $item['name'],
                 'uri' => $uri,
                 'method' => strtoupper($item['method'])
             ]);

@@ -8,26 +8,31 @@ declare(strict_types=1);
 namespace XinFox\ThinkPHP\Search;
 
 use think\helper\Str;
-use XinFox\Auth\VisitorInterface;
 
 abstract class Search implements SearchInterface
 {
     private EngineInterface $engine;
 
-    public function __construct(array $searchItems, VisitorInterface $visitor = null)
+    public function __construct(array $searchItems)
     {
-        $this->engine = $this->createEngine($searchItems, $visitor);
+        $this->engine = $this->createEngine($searchItems);
     }
 
-    public function createEngine(array $searchItems, VisitorInterface $visitor = null): EngineInterface
+    public function createEngine(array $searchItems): EngineInterface
     {
         $namespace = $this();
         $className = $namespace . '\\DefaultEngine';
-        if ($visitor) {
-            $className = $namespace . "\\" . Str::studly($visitor->getRole()) . "Engine";
+        $client = app()->request->header('Client-ID');
+        if ($client === null) {
+            $role = app()->request->visitor->getRole();
+            //TODO 从角色反推客户端
         }
-        if (!class_exists($className)) {
-            throw new \DomainException("$className Not Exists");
+        #TODO 使用配置
+        if (in_array($client, ['admin', 'merchant', 'miniProgram'])) {
+            $_className = $namespace . "\\" . Str::studly($client) . "Engine";
+            if (class_exists($_className)) {
+                $className = $_className;
+            }
         }
 
         return new $className($searchItems);

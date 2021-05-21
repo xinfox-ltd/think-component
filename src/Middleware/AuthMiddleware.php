@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace XinFox\ThinkPHP\Middleware;
 
+use Casbin\Enforcer;
 use Closure;
 use think\helper\Str;
 use XinFox\Auth\Auth;
@@ -18,9 +19,12 @@ class AuthMiddleware
 {
     protected Auth $auth;
 
-    public function __construct(Auth $auth)
+    protected Enforcer $enforcer;
+
+    public function __construct(Auth $auth, Enforcer $enforcer)
     {
         $this->auth = $auth;
+        $this->enforcer = $enforcer;
     }
 
     /**
@@ -30,6 +34,7 @@ class AuthMiddleware
      * @return mixed
      * @throws UnauthorizedException
      * @throws ForbiddenException
+     * @throws \Casbin\Exceptions\CasbinException
      */
     public function handle(Request $request, Closure $next, $roles = ['*'])
     {
@@ -40,6 +45,12 @@ class AuthMiddleware
             $visitor = $this->auth->user($token);
             $visitorRole = Str::lower($visitor->getRole());
             if (in_array('*', $roles) || in_array($visitorRole, $roles)) {
+                // 管理员角色另外处理，TODO 统一使用casbin处理权限问题
+                if (in_array($visitor->getRole(), ['admin', 'merchant_admin'])
+                    && !$this->enforcer->enforce($visitor->getRole(), $request->pathinfo(), $request->method())) {
+                    throw new ForbiddenException();
+                }
+
                 $request->setVisitor($visitor);
 
                 return $next($request);

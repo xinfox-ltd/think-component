@@ -7,45 +7,49 @@ declare(strict_types=1);
 
 namespace XinFox\ThinkPHP;
 
+use Casbin\Enforcer;
+use Casbin\Model\Model;
 use XinFox\Auth\Auth;
-use XinFox\ThinkPHP\Middleware\AuthMiddleware;
+use XinFox\ThinkPHP\Command\Access;
+use XinFox\ThinkPHP\Command\Initialize;
+use XinFox\ThinkPHP\Provider\Casbin\Adapter\DatabaseAdapter;
 
 class Service extends \think\Service
 {
     public function register()
     {
-        $config = $this->getAuthConfig();
+        // 注册数据迁移服务
+        $this->app->register(\think\migration\Service::class);
+
+        // 绑定 Casbin决策器
+        $this->app->bind(
+            'enforcer',
+            function () {
+                $model = new Model();
+                $model->loadModel(config_path() . 'casbin_rbac_model.conf');
+
+                return new Enforcer($model, app(DatabaseAdapter::class));
+            }
+        );
+
+        // 绑定 Auth
+        $config = $this->app->config->get('auth');
         $this->app->bind(
             Auth::class,
             fn() => new Auth($config)
         );
     }
 
-    public function getAuthConfig()
+    /**
+     * Boot function.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        $config = $this->app->config->get('auth');
-        if (empty($config)) {
-            $config = [
-                'inject' => [
-                    'enable' => true,
-                    'namespaces' => ["XinFox"],
-                ],
-                'route' => [
-                    'enable' => true,
-                    'controllers' => [],
-                    'auth' => [
-                        'enable' => true,
-                        'middleware' => AuthMiddleware::class
-                    ]
-                ],
-                'model' => [
-                    'enable' => true,
-                ],
-                'ignore' => [],
-                'store' => null,//缓存store
-            ];
-        }
-
-        return $config;
+        $this->commands([
+            'app:init' => Initialize::class,
+            'access:init' => Access::class
+        ]);
     }
 }

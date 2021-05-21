@@ -12,7 +12,9 @@
   "require": {
     "php": ">=7.4",
     "topthink/framework": "^6.0",
-    "xinfox/jwt-auth": "^1.1"
+    "xinfox/jwt-auth": "^1.1",
+    "casbin/casbin": "^3.2",
+    "topthink/think-migration": "^3.0"
   },
   "autoload": {
     "psr-4": {

@@ -12,6 +12,7 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\Output;
 use think\event\RouteLoaded;
+use think\facade\Db;
 use XinFox\ThinkPHP\Model\AuthRule;
 
 class AccessInit extends Command
@@ -29,6 +30,7 @@ class AccessInit extends Command
      * @param Input $input
      * @param Output $output
      * @return void
+     * @throws \think\db\exception\DbException
      */
     protected function execute(Input $input, Output $output)
     {
@@ -62,7 +64,7 @@ class AccessInit extends Command
         //触发路由载入完成事件
         $this->app->event->trigger(RouteLoaded::class);
 
-        AuthRule::destroy(0);
+        Db::table('xf_auth_rule')->where('1=1')->delete();
 
         foreach ($this->app->route->getRuleList() as $item) {
             $uri = preg_replace('/<(.*)>/Ui', ':$1', $item['rule']);

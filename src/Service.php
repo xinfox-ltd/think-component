@@ -23,7 +23,7 @@ class Service extends \think\Service
 
         // 绑定 Casbin决策器
         $this->app->bind(
-            'enforcer',
+            Enforcer::class,
             function () {
                 $model = new Model();
                 $model->loadModel(config_path() . 'casbin_rbac_model.conf');

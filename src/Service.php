@@ -10,7 +10,7 @@ namespace XinFox\ThinkPHP;
 use Casbin\Enforcer;
 use Casbin\Model\Model;
 use XinFox\Auth\Auth;
-use XinFox\ThinkPHP\Command\Access;
+use XinFox\ThinkPHP\Command\AccessInit;
 use XinFox\ThinkPHP\Command\Initialize;
 use XinFox\ThinkPHP\Provider\Casbin\Adapter\DatabaseAdapter;
 
@@ -49,7 +49,7 @@ class Service extends \think\Service
     {
         $this->commands([
             'app:init' => Initialize::class,
-            'access:init' => Access::class
+            'access:init' => AccessInit::class
         ]);
     }
 }

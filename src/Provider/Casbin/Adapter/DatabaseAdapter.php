@@ -10,7 +10,7 @@ namespace XinFox\ThinkPHP\Provider\Casbin\Adapter;
 use Casbin\Model\Model;
 use Casbin\Persist\Adapter;
 use Casbin\Persist\AdapterHelper;
-use XinFox\ThinkPHP\Model\AuthRule;
+use XinFox\ThinkPHP\Model\RoleRule;
 
 class DatabaseAdapter implements Adapter
 {
@@ -19,18 +19,18 @@ class DatabaseAdapter implements Adapter
     /**
      * Rules model.
      *
-     * @var AuthRule
+     * @var RoleRule
      */
-    protected AuthRule $model;
+    protected RoleRule $model;
 
     protected string $modelCacheKey = "xinfox_casbin_rule";
 
     /**
      * the DatabaseAdapter constructor.
      *
-     * @param AuthRule $model
+     * @param RoleRule $model
      */
-    public function __construct(AuthRule $model)
+    public function __construct(RoleRule $model)
     {
         $this->model = $model;
     }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace XinFox\ThinkPHP\Command;
 
+use Casbin\Enforcer;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -36,7 +37,8 @@ class AccessInit extends Command
     {
         $dir = $input->getArgument('dir') ?: '';
 
-        $filename = $this->app->getRootPath() . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '') . 'route_list.php';
+        $filename = $this->app->getRootPath(
+            ) . 'runtime' . DIRECTORY_SEPARATOR . ($dir ? $dir . DIRECTORY_SEPARATOR : '') . 'route_list.php';
 
         if (is_file($filename)) {
             unlink($filename);
@@ -66,14 +68,32 @@ class AccessInit extends Command
 
         Db::table('xf_auth_rule')->where('1=1')->delete();
 
+        /** @var Enforcer $enforcer */
+        $enforcer = $this->app->get(Enforcer::class);
+        $enforcer->deletePermission();
+
         foreach ($this->app->route->getRuleList() as $item) {
             $uri = preg_replace('/<(.*)>/Ui', ':$1', $item['rule']);
-            AuthRule::create([
-                'status' => 1,
-                'name' => empty($item['name']) ? $uri: $item['name'],
-                'uri' => $uri,
-                'method' => strtoupper($item['method'])
-            ]);
+            AuthRule::create(
+                [
+                    'status' => 1,
+                    'name' => empty($item['name']) ? $uri : $item['name'],
+                    'uri' => $uri,
+                    'method' => strtoupper($item['method'])
+                ]
+            );
+
+            if (!is_array($item['option']['middleware'])) {
+                continue;
+            }
+
+            foreach ($item['option']['middleware'] as $middleware) {
+                foreach ($middleware[1][0] as $role) {
+                    $enforcer->addPermissionForUser($role, $uri, strtoupper($item['method']));
+                }
+            }
         }
+
+        $output->writeln("success");
     }
 }

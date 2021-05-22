@@ -12,6 +12,7 @@ use Casbin\Model\Model;
 use XinFox\Auth\Auth;
 use XinFox\ThinkPHP\Command\AccessInit;
 use XinFox\ThinkPHP\Command\Initialize;
+use XinFox\ThinkPHP\Command\PermissionSet;
 use XinFox\ThinkPHP\Provider\Casbin\Adapter\DatabaseAdapter;
 
 class Service extends \think\Service
@@ -49,7 +50,8 @@ class Service extends \think\Service
     {
         $this->commands([
             'app:init' => Initialize::class,
-            'access:init' => AccessInit::class
+            'access:init' => AccessInit::class,
+            'permission:set' => PermissionSet::class
         ]);
     }
 }

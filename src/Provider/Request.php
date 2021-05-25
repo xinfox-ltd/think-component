@@ -17,11 +17,11 @@ class Request extends \think\Request
     public function __construct()
     {
         parent::__construct();
-
-        $this->visitor = new Guest();
+        // 默认访客
+        $this->setVisitor(new Guest());
     }
 
-    public function visitor(): VisitorInterface
+    public function getVisitor(): VisitorInterface
     {
         return $this->visitor;
     }

@@ -49,7 +49,7 @@ abstract class BaseController
     public function __get($propertyName)
     {
         if ($propertyName == 'visitor') {
-            return $this->request->visitor();
+            return $this->request->getVisitor();
         } elseif ($propertyName == 'auth') {
             return $this->app->get(Auth::class);
         }

@@ -7,13 +7,17 @@ declare(strict_types=1);
 
 namespace XinFox\ThinkPHP\Http;
 
-class Request extends \XinFox\ThinkPHP\Provider\Request
+use XinFox\ThinkPHP\Provider\Request as ProviderRequest;
+
+class Request
 {
     protected bool $batchValidate = false;
 
-    public function __construct()
+    protected ProviderRequest $request;
+
+    public function __construct(ProviderRequest $request)
     {
-        parent::__construct();
+        $this->request = $request;
         $this->validate();
     }
 
@@ -36,16 +40,17 @@ class Request extends \XinFox\ThinkPHP\Provider\Request
 
     /**
      * 初始化验证
+     * @param array $data
      */
-    protected function validate()
+    protected function validate(array $data = [])
     {
         $this->beforeValidate();
 
         $rules = $this->rules();
-        if ($rules && $this->isPost()) {
+        if ($rules && ($this->request->isPost() || $this->request->isPut())) {
             // 验证
             $message = $this->message();
-            validate($rules, $message, $this->batchValidate)->check($this->post());
+            validate($rules, $message, $this->batchValidate)->check($data ?? $this->request->param());
         }
     }
 }

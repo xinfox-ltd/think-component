@@ -12,6 +12,8 @@ use think\helper\Str;
 
 abstract class Engine implements EngineInterface
 {
+    protected array $requestData = [];
+
     protected int $page = 1;
 
     protected int $pageSize = 10;
@@ -37,7 +39,8 @@ abstract class Engine implements EngineInterface
 
         unset($data['page'], $data['pageSize']);
 
-        $this->query = $this->initialize($data);
+        $this->query = $this->initialize();
+        $this->requestData = $data;
 
         foreach ($data as $key => $val) {
             if (empty($val) && $val !== 0) {

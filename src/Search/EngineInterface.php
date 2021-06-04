@@ -11,5 +11,5 @@ use think\db\Query;
 
 interface EngineInterface
 {
-    public function initialize(): Query;
+    public function initialize(array $data): Query;
 }

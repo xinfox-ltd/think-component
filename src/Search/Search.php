@@ -37,9 +37,11 @@ abstract class Search implements SearchInterface
     }
 
     /**
+     * @param bool $paginate 是否分页
+     * @return mixed
      */
-    public function execute(): \think\Paginator
+    public function execute(bool $paginate = true)
     {
-        return $this->engine->search();
+        return $this->engine->search($paginate);
     }
 }

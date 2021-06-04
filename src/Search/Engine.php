@@ -28,7 +28,7 @@ abstract class Engine implements EngineInterface
             $this->page = intval($data['page']);
         }
 
-        $pageSize = $data['pageSize'] ?? $data['page_size'] ??= 1;
+        $pageSize = $data['pageSize'] ?? $data['page_size'] ??= 10;
         $this->pageSize = (int)$pageSize;
 
         if ($this->pageSize > 100) {
@@ -67,11 +67,16 @@ abstract class Engine implements EngineInterface
     }
 
     /**
+     * @param bool $paginate 是否分页
+     * @return \think\Collection|\think\Paginator
+     * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function search(): \think\Paginator
+    public function search(bool $paginate = true)
     {
-        return $this->query->field($this->fields)
-            ->paginate($this->pageSize);
+        $query = $this->query->field($this->fields);
+
+        return $paginate ? $query->paginate($this->pageSize) : $query->select();
     }
 }

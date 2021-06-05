@@ -75,9 +75,8 @@ abstract class Engine implements EngineInterface
             }
 
             if (!empty($this->sortAlias) && isset($this->sortAlias[$field])) {
-                $field = $this->sortAlias[$field];
+                $this->query->order($this->sortAlias[$field], $order);
             }
-            $this->query->order($field, $order);
         }
     }
 

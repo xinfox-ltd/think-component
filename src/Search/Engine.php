@@ -57,15 +57,27 @@ abstract class Engine implements EngineInterface
         }
     }
 
+    /**
+     * @param string $sort
+     */
     protected function sort(string $sort)
     {
         $arrSort = explode(',', $sort);
         foreach ($arrSort as $item) {
-            [$field, $order] = explode('_', $item);
+            if (stristr($item, '_') === false) {
+                $field = $item;
+            } else {
+                [$field, $order] = explode('_', $item);
+                $order = strtolower($order);
+            }
+            if (!isset($order) || !in_array($order, ['ASC', 'DESC'])) {
+                $order = 'DESC';
+            }
+
             if (!empty($this->sortAlias) && isset($this->sortAlias[$field])) {
                 $field = $this->sortAlias[$field];
             }
-            $this->query->order($field, strtolower($order));
+            $this->query->order($field, $order);
         }
     }
 

@@ -42,7 +42,7 @@ class Request
      * 初始化验证
      * @param array $data
      */
-    protected function validate(array $data = [])
+    protected function validate(array $data = null)
     {
         $this->beforeValidate();
 

@@ -68,7 +68,7 @@ abstract class Engine implements EngineInterface
                 $field = $item;
             } else {
                 [$field, $order] = explode('_', $item);
-                $order = strtolower($order);
+                $order = strtoupper($order);
             }
             if (!isset($order) || !in_array($order, ['ASC', 'DESC'])) {
                 $order = 'DESC';

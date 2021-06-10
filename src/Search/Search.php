@@ -14,9 +14,20 @@ abstract class Search implements SearchInterface
 {
     private EngineInterface $engine;
 
-    public function __construct(array $searchItems)
+    public function __construct($object)
     {
-        $this->engine = $this->createEngine($searchItems);
+        if ($object instanceof EngineInterface) {
+            $this->setEngine($object);
+        } elseif (is_array($object)) {
+            $this->setEngine($this->createEngine($object));
+        } else {
+            throw new \InvalidArgumentException("Engine error");
+        }
+    }
+
+    public function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
     }
 
     public function createEngine(array $searchItems): EngineInterface
@@ -31,7 +42,6 @@ abstract class Search implements SearchInterface
                 $className = $_className;
             }
         }
-
 
         return new $className($searchItems);
     }

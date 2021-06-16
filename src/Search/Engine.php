@@ -22,6 +22,8 @@ abstract class Engine implements EngineInterface
 
     protected array $sortAlias = [];
 
+    protected array $defaultSort = [];
+
     protected array $fields = [];
 
     public function __construct(array $data)
@@ -75,6 +77,7 @@ abstract class Engine implements EngineInterface
             }
 
             if (!empty($this->sortAlias) && isset($this->sortAlias[$field])) {
+                $this->defaultSort && $this->defaultSort = [];
                 $this->query->order($this->sortAlias[$field], $order);
             }
         }
@@ -90,6 +93,12 @@ abstract class Engine implements EngineInterface
     public function search(bool $paginate = true)
     {
         $query = $this->query->field($this->fields);
+
+        if ($this->defaultSort) {
+            foreach ($this->defaultSort as $field => $order) {
+                $this->query->order($field, $order);
+            }
+        }
 
         return $paginate ? $query->paginate($this->pageSize) : $query->select();
     }

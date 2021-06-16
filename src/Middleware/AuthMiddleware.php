@@ -44,12 +44,12 @@ class AuthMiddleware
 
             $visitor = $this->auth->user($token);
             $visitorRole = Str::lower($visitor->getRole());
-            if ($visitorRole == 'root') {
+            if ($visitorRole == 'root' || in_array('*', $roles)) {
                 $request->setVisitor($visitor);
                 return $next($request);
             }
 
-            if (in_array('*', $roles) || in_array($visitorRole, $roles)) {
+            if (in_array($visitorRole, $roles)) {
                 // 管理员角色另外处理，TODO 统一使用casbin处理权限问题
                 if (in_array($visitor->getRole(), ['admin', 'merchant_admin'])
                     && !$this->enforcer->enforce($visitorRole, $request->pathinfo(), $request->method())) {

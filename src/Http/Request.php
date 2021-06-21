@@ -26,9 +26,9 @@ class Request
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    protected function rules()
+    protected function rules(): array
     {
         return [];
     }
@@ -40,7 +40,7 @@ class Request
 
     /**
      * 初始化验证
-     * @param array $data
+     * @param array|null $data
      */
     protected function validate(array $data = null)
     {

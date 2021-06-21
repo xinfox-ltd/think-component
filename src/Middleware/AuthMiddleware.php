@@ -38,32 +38,26 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next, $roles = ['*'])
     {
-        $authorization = $request->header('Authorization');
-        if ($authorization !== null) {
-            $token = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $authorization));
+        $visitor = $request->getVisitor();
 
-            $visitor = $this->auth->user($token);
-            $visitorRole = Str::lower($visitor->getRole());
-            if ($visitorRole == 'root' || in_array('*', $roles)) {
-                $request->setVisitor($visitor);
-                return $next($request);
-            }
-
-            if (in_array($visitorRole, $roles)) {
-                // 管理员角色另外处理，TODO 统一使用casbin处理权限问题
-                if (in_array($visitor->getRole(), ['admin', 'merchant_admin'])
-                    && !$this->enforcer->enforce($visitorRole, $request->pathinfo(), $request->method())) {
-                    throw new ForbiddenException();
-                }
-
-                $request->setVisitor($visitor);
-
-                return $next($request);
-            }
-
-            throw new ForbiddenException();
+        $visitorRole = Str::lower($visitor->getRole());
+        if ($visitorRole == 'root' || in_array('*', $roles)) {
+            $request->setVisitor($visitor);
+            return $next($request);
         }
 
-        throw new UnauthorizedException();
+        if (in_array($visitorRole, $roles)) {
+            // 管理员角色另外处理，TODO 统一使用casbin处理权限问题
+            if (in_array($visitor->getRole(), ['admin', 'merchant_admin'])
+                && !$this->enforcer->enforce($visitorRole, $request->pathinfo(), $request->method())) {
+                throw new ForbiddenException();
+            }
+
+            $request->setVisitor($visitor);
+
+            return $next($request);
+        }
+
+        throw new ForbiddenException();
     }
 }

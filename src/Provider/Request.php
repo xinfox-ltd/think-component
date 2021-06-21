@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace XinFox\ThinkPHP\Provider;
 
+use think\facade\Log;
+use XinFox\Auth\Auth;
 use XinFox\Auth\Guest;
 use XinFox\Auth\VisitorInterface;
 
@@ -17,8 +19,23 @@ class Request extends \think\Request
     public function __construct()
     {
         parent::__construct();
+
         // 默认访客
-        $this->setVisitor(new Guest());
+        $visitor = new Guest();
+
+        $authorization = $this->header('Authorization');
+        if ($authorization !== null) {
+            $token = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $authorization));
+            if ($token) {
+                try {
+                    $visitor = app(Auth::class)->user($token);
+                } catch (\Exception $e) {
+                    Log::info($e);
+                }
+            }
+        }
+
+        $this->setVisitor($visitor);
     }
 
     public function getVisitor(): VisitorInterface

@@ -41,8 +41,8 @@ abstract class Engine implements EngineInterface
 
         unset($data['page'], $data['pageSize']);
 
-        $this->query = $this->initialize();
         $this->requestData = $data;
+        $this->query = $this->initialize();
 
         foreach ($data as $key => $val) {
             if (empty($val) && $val !== 0) {

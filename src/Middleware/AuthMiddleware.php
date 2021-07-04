@@ -15,6 +15,11 @@ use XinFox\Auth\Exception\ForbiddenException;
 use XinFox\Auth\Exception\UnauthorizedException;
 use XinFox\ThinkPHP\Provider\Request;
 
+/**
+ * Class AuthMiddleware
+ * @package XinFox\ThinkPHP\Middleware
+ * @deprecated
+ */
 class AuthMiddleware
 {
     protected Auth $auth;
@@ -42,7 +47,6 @@ class AuthMiddleware
 
         $visitorRole = Str::lower($visitor->getRole());
         if ($visitorRole == 'root' || in_array('*', $roles)) {
-            $request->setVisitor($visitor);
             return $next($request);
         }
 
@@ -52,8 +56,6 @@ class AuthMiddleware
                 && !$this->enforcer->enforce($visitorRole, $request->pathinfo(), $request->method())) {
                 throw new ForbiddenException();
             }
-
-            $request->setVisitor($visitor);
 
             return $next($request);
         }

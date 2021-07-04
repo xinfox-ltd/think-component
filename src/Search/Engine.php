@@ -45,7 +45,7 @@ abstract class Engine implements EngineInterface
         $this->query = $this->initialize();
 
         foreach ($data as $key => $val) {
-            if (empty($val) && $val !== 0) {
+            if (empty($val) && $val != 0) {
                 continue;
             }
             if ($key === 'sort') {

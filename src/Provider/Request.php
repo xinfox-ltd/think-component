@@ -31,14 +31,14 @@ class Request extends \think\Request
         $request = parent::__make($app);
 
         $authorization = $request->header('Authorization');
-        if ($authorization !== null && $authorization != 'Bearer') {
+        if ($authorization !== null && $authorization != 'Bearer' && is_string($authorization)) {
             $token = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $authorization));
             if ($token) {
               try {
                 $visitor = app(Auth::class)->user($token);
                 $request->setVisitor($visitor);
               } catch (\Throwable $e) {
-                Log::error($e);
+                Log::error("解析token异常：" . $e->getMessage());
               }
             }
         }

@@ -34,12 +34,8 @@ class Request extends \think\Request
         if ($authorization !== null) {
             $token = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $authorization));
             if ($token) {
-                try {
-                    $visitor = app(Auth::class)->user($token);
-                    $request->setVisitor($visitor);
-                } catch (\Exception $e) {
-                    Log::info($e);
-                }
+              $visitor = app(Auth::class)->user($token);
+              $request->setVisitor($visitor);
             }
         }
 

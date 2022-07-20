@@ -31,11 +31,15 @@ class Request extends \think\Request
         $request = parent::__make($app);
 
         $authorization = $request->header('Authorization');
-        if ($authorization !== null) {
+        if ($authorization !== null && $authorization != 'Bearer') {
             $token = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $authorization));
             if ($token) {
-              $visitor = app(Auth::class)->user($token);
-              $request->setVisitor($visitor);
+              try {
+                $visitor = app(Auth::class)->user($token);
+                $request->setVisitor($visitor);
+              } catch (\Throwable $e) {
+                Log::error($e);
+              }
             }
         }
 
